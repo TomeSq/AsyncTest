@@ -1,28 +1,35 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AsyncTest
 {
     class Program
     {
-        static async Task AsyncMethod()
-        {
-            await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
-            Console.WriteLine("Done!");
-        }
-
         static async Task Main(string[] args)
         {
-            Console.WriteLine("start AsyncMethod");
+            var task = HeavyMethod1();
 
-            //これは非同期
-            //_ = AsyncMethod().ConfigureAwait(false);
+            HeavyMethod2();
 
-            //これは以降が同期
-            await AsyncMethod().ConfigureAwait(false);
-            Console.WriteLine("end AsyncMethod");
+            Console.WriteLine(task.Result);
 
             Console.ReadKey();
+        }
+
+        static async Task<string> HeavyMethod1()
+        {
+            Console.WriteLine("すごく重い処理その1(´・ω・｀)はじまり");
+            await Task.Delay(5000).ConfigureAwait(false);
+            Console.WriteLine("すごく重い処理その1(´・ω・｀)おわり");
+            return "hoge";
+        }
+
+        static void HeavyMethod2()
+        {
+            Console.WriteLine("すごく重い処理その2(´・ω・｀)はじまり");
+            Thread.Sleep(3000);
+            Console.WriteLine("すごく重い処理その2(´・ω・｀)おわり");
         }
     }
 }
