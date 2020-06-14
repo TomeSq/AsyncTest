@@ -11,12 +11,18 @@ namespace AsyncTest
             Console.WriteLine("Done!");
         }
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.WriteLine("start AsyncMethod");
-            var task = AsyncMethod();
-            task.Wait();
+
+            //これは非同期
+            //_ = AsyncMethod().ConfigureAwait(false);
+
+            //これは以降が同期
+            await AsyncMethod().ConfigureAwait(false);
             Console.WriteLine("end AsyncMethod");
+
+            Console.ReadKey();
         }
     }
 }
