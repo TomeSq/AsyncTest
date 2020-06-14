@@ -1,0 +1,9 @@
+﻿<Project>
+ 
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\'))</RepoRoot>
+    <PathMap>$(RepoRoot)=.</PathMap>
+  </PropertyGroup>
+ 
+</Project>
