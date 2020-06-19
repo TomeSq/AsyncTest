@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using AsyncCancel;
 
 namespace AsyncTest
 {
@@ -13,14 +15,13 @@ namespace AsyncTest
             {
                 try
                 {
+                    cts.CancelAfter(TimeSpan.FromSeconds(5));
+//                    var task = HeavyMethod1(cts.Token);
 
-                    cts.CancelAfter(1000);
-                    var task = HeavyMethod1(cts.Token);
-                    cts.Cancel();
+//                    HeavyMethod2();
+                    await ProcessWait(cts.Token).ConfigureAwait(false);
 
-                    HeavyMethod2();
-
-                    await task;
+//                    await task.ConfigureAwait(false);
                 }
                 catch (OperationCanceledException ex)
                 {
@@ -33,11 +34,9 @@ namespace AsyncTest
         static async Task HeavyMethod1(CancellationToken ct)
         {
             Console.WriteLine("すごく重い処理その1(´・ω・｀)はじまり");
-            //awaitがついているのでDelayが終わるまで次の処理は実行されない
-            await Task.Delay(5000).ConfigureAwait(false);
 
-            //自分でチェックしないとタスクキャンセルの例外を投げられない
-//            ct.ThrowIfCancellationRequested();
+            //awaitがついているのでDelayが終わるまで次の処理は実行されない
+            await Task.Delay(5000, ct).ConfigureAwait(false);
 
             Console.WriteLine("すごく重い処理その1(´・ω・｀)おわり");
         }
@@ -47,6 +46,35 @@ namespace AsyncTest
             Console.WriteLine("すごく重い処理その2(´・ω・｀)はじまり");
             Thread.Sleep(3000);
             Console.WriteLine("すごく重い処理その2(´・ω・｀)おわり");
+        }
+
+        static async Task<int> ProcessWait(CancellationToken cancellationToken)
+        {
+            Console.WriteLine("Process Wait処理のはじまり");
+
+            var startInfo = new ProcessStartInfo()
+            { 
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardError = false,
+                RedirectStandardOutput = false,
+                RedirectStandardInput = false,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                Arguments = "127.0.0.1 -n 10",
+                FileName = "ping",
+            };
+
+            using (var process = new Process()
+            {
+                StartInfo = startInfo,
+            })
+            {
+                process.Start();
+                var result = await process.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
+                Console.WriteLine("Process Wait処理のおわり");
+
+                return result;
+            }
         }
     }
 }
