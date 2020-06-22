@@ -35,11 +35,12 @@ namespace AsyncCancel.Tests
                 try
                 {
                     _ = await process.WaitForExitAsync(cts.Token).ConfigureAwait(false);
-                    Assert.True(false, "OperationCanceledExceptionの例外が投げられませんでした。");
                 }
-                catch(OperationCanceledException)
+                catch (OperationCanceledException)
                 {
+                    return;
                 }
+                Assert.True(false, "OperationCanceledExceptionの例外が投げられませんでした。");
             }
         }
     }
