@@ -8,7 +8,7 @@ namespace AsyncCancel.Tests
     public class ProcessExTests
     {
         [Fact]
-        public async void Procesƒ^ƒCƒ€ƒAƒEƒgƒLƒƒƒ“ƒZƒ‹()
+        public async void Procesã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆã‚­ãƒ£ãƒ³ã‚»ãƒ«()
         {
             //Arrange
             var startInfo = new ProcessStartInfo()
@@ -40,7 +40,7 @@ namespace AsyncCancel.Tests
                 {
                     return;
                 }
-                Assert.True(false, "OperationCanceledException‚Ì—áŠO‚ª“Š‚°‚ç‚ê‚Ü‚¹‚ñ‚Å‚µ‚½B");
+                Assert.True(false, "OperationCanceledExceptionã®ä¾‹å¤–ãŒæŠ•ã’ã‚‰ã‚Œã¾ã›ã‚“ã§ã—ãŸã€‚");
             }
         }
     }
