@@ -15,10 +15,12 @@ namespace AsyncTest
             {
                 try
                 {
-                    cts.CancelAfter(TimeSpan.FromSeconds(5));
 //                    var task = HeavyMethod1(cts.Token);
 
-//                    HeavyMethod2();
+                    HeavyMethod2();
+                    cts.CancelAfter(TimeSpan.FromSeconds(5));
+                    //CancelAfterは直前に設定しないと実行した時点からのカウントになる
+//                    await Task.Delay(TimeSpan.FromSeconds(6)).ConfigureAwait(false);
                     await ProcessWait(cts.Token).ConfigureAwait(false);
 
 //                    await task.ConfigureAwait(false);
